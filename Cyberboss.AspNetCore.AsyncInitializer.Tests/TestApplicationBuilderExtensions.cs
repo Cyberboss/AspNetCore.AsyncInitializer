@@ -17,6 +17,7 @@ namespace Cyberboss.AspNetCore.AsyncInitializer.Tests
 		{
 			var mockAppBuilder = new Mock<IApplicationBuilder>();
 			Assert.ThrowsException<ArgumentNullException>(() => mockAppBuilder.Object.UseAsyncInitialization<TestApplicationBuilderExtensions>(null));
+			Assert.ThrowsException<ArgumentNullException>(() => ((IApplicationBuilder)null).UseAsyncInitialization<TestApplicationBuilderExtensions>(null));
 		}
 
 		[TestMethod]
@@ -152,6 +153,7 @@ namespace Cyberboss.AspNetCore.AsyncInitializer.Tests
 		{
 			var mockAppBuilder = new Mock<IApplicationBuilder>();
 			Assert.ThrowsException<ArgumentNullException>(() => mockAppBuilder.Object.UseAsyncInitialization(null));
+			Assert.ThrowsException<ArgumentNullException>(() => ((IApplicationBuilder)null).UseAsyncInitialization(null));
 		}
 
 		[TestMethod]
