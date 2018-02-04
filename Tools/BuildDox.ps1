@@ -4,9 +4,7 @@ $doxdir = "C:\dox"
 
 New-Item -Path $doxdir -ItemType directory
 
-$publish_dox = (-not (Test-Path Env:APPVEYOR_PULL_REQUEST_NUMBER)) -and ("$Env:APPVEYOR_REPO_BRANCH" -eq "master")
-
-$publish_dox = (-not (Test-Path Env:APPVEYOR_PULL_REQUEST_NUMBER)) -and ("$Env:APPVEYOR_REPO_BRANCH" -eq "master") -and ("$Env:CONFIGURATION" -eq "Release")
+$publish_dox = (-not (Test-Path Env:APPVEYOR_PULL_REQUEST_NUMBER)) -and ("$Env:APPVEYOR_REPO_BRANCH" -eq "master") -and ("$Env:CONFIGURATION" -match "Release")
 
 if($publish_dox){
 	$github_url = "github.com/$Env:APPVEYOR_REPO_NAME"
