@@ -1,0 +1,40 @@
+pull_requests:
+  do_not_increment_build_number: true
+environment:
+  repo_token:
+    secure: mA60oihBansqsaIdbM4U4yBronp4v6viR+o1XA0mRwrFF5ypBd6MeVZ9UY96a9Rm
+skip_branch_with_pr: true
+image: Visual Studio 2017
+configuration:
+  - Debug
+  - Release
+shallow_clone: true
+cache:
+  - packages -> **\packages.config
+  - C:\ProgramData\chocolatey\bin -> appveyor.yml
+  - C:\ProgramData\chocolatey\lib -> appveyor.yml
+install:
+  - choco install doxygen.portable codecov
+build:
+  project: Cyberboss.AspNetCore.AsyncInitializer.sln
+  publish_nuget: true
+before_build:
+  - dotnet restore
+after_build:
+  - ps: if($env:CONFIGURATION -match "Release") { if($env:APPVEYOR_REPO_BRANCH -match "master"){ $env:NugetDeploy = "Do it." } }
+test_script:
+  - set path=%ProgramFiles(x86)%\Microsoft Visual Studio\2017\TestAgent\Common7\IDE\CommonExtensions\Microsoft\TestWindow;%path%
+  - copy "%ProgramFiles(x86)%\Microsoft Visual Studio\2017\Community\Common7\IDE\CommonExtensions\Microsoft\TestWindow\Extensions\appveyor.*" "%ProgramFiles(x86)%\Microsoft Visual Studio\2017\TestAgent\Common7\IDE\CommonExtensions\Microsoft\TestWindow\Extensions" /y
+  - vstest.console /EnableCodeCoverage "Cyberboss.AspNetCore.AsyncInitializer.Tests\bin\%CONFIGURATION%\netcoreapp2.0\Cyberboss.AspNetCore.AsyncInitializer.Tests.dll" /logger:trx;LogFileName=results.trx
+  - ps: $wc = New-Object 'System.Net.WebClient'
+  - ps: $wc.UploadFile("https://ci.appveyor.com/api/testresults/mstest/$($env:APPVEYOR_JOB_ID)", (Resolve-Path .\TestResults\results.trx))
+after_test:
+  - ps: Tools/UploadCoverage.ps1
+  - ps: Tools/BuildDox.ps1
+deploy:
+  - provider: NuGet
+    api_key:
+      secure: TC2nqiJKG1AhUa7TCsveRSgCmvvef6A0iKUkKtRSnG2huhxXGyndfqZr3wAnlqaK
+    artifact: /.*\.nupkg/
+    on:
+      NugetDeploy: "Do it."
