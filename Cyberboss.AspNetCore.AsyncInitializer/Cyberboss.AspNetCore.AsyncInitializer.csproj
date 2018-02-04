@@ -10,7 +10,7 @@
     <PackageProjectUrl>https://Cyberboss.github.io/AspNetCore.AsyncInitializer</PackageProjectUrl>
     <RepositoryUrl>https://github.com/Cyberboss/AspNetCore.AsyncInitializer</RepositoryUrl>
     <RepositoryType>Git</RepositoryType>
-    <PackageReleaseNotes>Initial release</PackageReleaseNotes>
+    <PackageReleaseNotes>Added ArgumentNullExceptions for the applicationBuilder parameters</PackageReleaseNotes>
     <PackageLicenseUrl>https://github.com/Cyberboss/AspNetCore.AsyncInitializer/LICENSE</PackageLicenseUrl>
     <AssemblyVersion>1.0.1.0</AssemblyVersion>
     <FileVersion>1.0.1.0</FileVersion>
