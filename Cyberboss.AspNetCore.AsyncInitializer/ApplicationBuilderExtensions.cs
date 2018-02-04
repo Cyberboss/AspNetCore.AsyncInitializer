@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 namespace Cyberboss.AspNetCore.AsyncInitializer
 {
 	/// <summary>
-	/// Extensions for <see cref="IApplicationBuilder"/>
+	/// Asynchronous initialization extensions for <see cref="IApplicationBuilder"/>
 	/// </summary>
 	public static class ApplicationBuilderExtensions
 	{
@@ -18,8 +18,12 @@ namespace Cyberboss.AspNetCore.AsyncInitializer
 		/// <typeparam name="TDependency">A dependency available in <see cref="IApplicationBuilder.ApplicationServices"/></typeparam>
 		/// <param name="applicationBuilder">The <see cref="IApplicationBuilder"/> to <see cref="IApplicationBuilder.Use(Func{Microsoft.AspNetCore.Http.RequestDelegate, Microsoft.AspNetCore.Http.RequestDelegate})"/></param>
 		/// <param name="asyncInitializer">A <see cref="Func{T1, T2, TResult}"/> taking a <typeparamref name="TDependency"/> and <see cref="CancellationToken"/> to run at startup. Note that synchronously thrown exceptions will be unhandled</param>
+		/// <exception cref="ArgumentNullException"><paramref name="applicationBuilder"/> or <paramref name="asyncInitializer"/> is <see langword="null"/></exception>
+		/// <exception cref="InvalidOperationException">There is no service of type <typeparamref name="TDependency"/></exception>
 		public static void UseAsyncInitialization<TDependency>(this IApplicationBuilder applicationBuilder, Func<TDependency, CancellationToken, Task> asyncInitializer)
 		{
+			if (applicationBuilder == null)
+				throw new ArgumentNullException(nameof(applicationBuilder));
 			if (asyncInitializer == null)
 				throw new ArgumentNullException(nameof(asyncInitializer));
 
@@ -34,8 +38,11 @@ namespace Cyberboss.AspNetCore.AsyncInitializer
 		/// </summary>
 		/// <param name="applicationBuilder">The <see cref="IApplicationBuilder"/> to <see cref="IApplicationBuilder.Use(Func{Microsoft.AspNetCore.Http.RequestDelegate, Microsoft.AspNetCore.Http.RequestDelegate})"/></param>
 		/// <param name="asyncInitializer">A <see cref="Func{T, TResult}"/> taking a <see cref="CancellationToken"/> to run at startup. Note that synchronously thrown exceptions will be unhandled</param>
+		/// <exception cref="ArgumentNullException"><paramref name="applicationBuilder"/> or <paramref name="asyncInitializer"/> is <see langword="null"/></exception>
 		public static void UseAsyncInitialization(this IApplicationBuilder applicationBuilder, Func<CancellationToken, Task> asyncInitializer)
 		{
+			if (applicationBuilder == null)
+				throw new ArgumentNullException(nameof(applicationBuilder));
 			if (asyncInitializer == null)
 				throw new ArgumentNullException(nameof(asyncInitializer));
 
