@@ -48,11 +48,17 @@ namespace Cyberboss.AspNetCore.AsyncInitializer
 
 			var applicationLifetime = applicationBuilder.ApplicationServices.GetRequiredService<IApplicationLifetime>();
 			Task initializationTask = null;
+			var tcs = new TaskCompletionSource<object>();
 
-			applicationLifetime.ApplicationStarted.Register(() => initializationTask = asyncInitializer(applicationLifetime.ApplicationStopping));
+			applicationLifetime.ApplicationStarted.Register(() =>
+			{
+				initializationTask = asyncInitializer(applicationLifetime.ApplicationStopping);
+				tcs.SetResult(null);
+			});
 
 			applicationBuilder.Use(async (context, next) =>
 			{
+				await tcs.Task.ConfigureAwait(false);
 				await initializationTask.ConfigureAwait(false);
 				await next().ConfigureAwait(false);
 			});
