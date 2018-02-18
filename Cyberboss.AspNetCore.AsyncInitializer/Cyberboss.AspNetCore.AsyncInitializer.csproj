@@ -3,7 +3,7 @@
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <Version>1.0.1.0</Version>
+    <Version>1.0.2.0</Version>
     <Company />
     <Authors>Cyberboss</Authors>
     <Description>Asynchronous initialization for ASP.NET Core hosts</Description>
@@ -12,8 +12,8 @@
     <RepositoryType>Git</RepositoryType>
     <PackageReleaseNotes>Added ArgumentNullExceptions for the applicationBuilder parameters</PackageReleaseNotes>
     <PackageLicenseUrl>https://github.com/Cyberboss/AspNetCore.AsyncInitializer/LICENSE</PackageLicenseUrl>
-    <AssemblyVersion>1.0.1.0</AssemblyVersion>
-    <FileVersion>1.0.1.0</FileVersion>
+    <AssemblyVersion>1.0.2.0</AssemblyVersion>
+    <FileVersion>1.0.2.0</FileVersion>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
