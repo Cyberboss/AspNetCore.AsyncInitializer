@@ -26,11 +26,8 @@ namespace Cyberboss.AspNetCore.AsyncInitializer
 				throw new ArgumentNullException(nameof(applicationBuilder));
 			if (asyncInitializer == null)
 				throw new ArgumentNullException(nameof(asyncInitializer));
-
-			//resolve here so they get the exception asap
-			var toInitialize = applicationBuilder.ApplicationServices.GetRequiredService<TDependency>();
-
-			applicationBuilder.UseAsyncInitialization((cancellationToken) => asyncInitializer(toInitialize, cancellationToken));
+			
+			applicationBuilder.UseAsyncInitialization((cancellationToken) => asyncInitializer(applicationBuilder.ApplicationServices.GetRequiredService<TDependency>(), cancellationToken));
 		}
 
 		/// <summary>
@@ -50,9 +47,15 @@ namespace Cyberboss.AspNetCore.AsyncInitializer
 			Task initializationTask = null;
 			var tcs = new TaskCompletionSource<object>();
 
+			async Task AsyncProcess()
+			{
+				using (applicationBuilder.ApplicationServices.CreateScope())
+					await asyncInitializer(applicationLifetime.ApplicationStopping).ConfigureAwait(false);
+			}
+
 			applicationLifetime.ApplicationStarted.Register(() =>
 			{
-				initializationTask = asyncInitializer(applicationLifetime.ApplicationStopping);
+				initializationTask = AsyncProcess();
 				tcs.SetResult(null);
 			});
 
