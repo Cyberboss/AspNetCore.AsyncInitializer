@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using System;
@@ -26,6 +27,10 @@ namespace Cyberboss.AspNetCore.AsyncInitializer.Tests
 			var mockAppBuilder = new Mock<IApplicationBuilder>();
 			var mockAppLifetime = new Mock<IApplicationLifetime>();
 			var mockServiceProvider = new Mock<IServiceProvider>();
+			var mockServiceScopeFactory = new Mock<IServiceScopeFactory>();
+			var mockServiceScope = new Mock<IServiceScope>();
+			mockServiceScopeFactory.Setup(x => x.CreateScope()).Returns(mockServiceScope.Object);
+			mockServiceProvider.Setup(x => x.GetService(typeof(IServiceScopeFactory))).Returns(mockServiceScopeFactory.Object);
 
 			var startCancellationTokenSource = new CancellationTokenSource();
 			var stopCancellationTokenSource = new CancellationTokenSource();
@@ -57,29 +62,15 @@ namespace Cyberboss.AspNetCore.AsyncInitializer.Tests
 		}
 
 		[TestMethod]
-		public void TestGenericFailsAtCallTimeWithNoDependencyResolved()
-		{
-			var mockAppBuilder = new Mock<IApplicationBuilder>();
-			var mockAppLifetime = new Mock<IApplicationLifetime>();
-			var mockServiceProvider = new Mock<IServiceProvider>();
-
-			var startCancellationTokenSource = new CancellationTokenSource();
-			var stopCancellationTokenSource = new CancellationTokenSource();
-
-			mockAppLifetime.SetupGet(x => x.ApplicationStarted).Returns(startCancellationTokenSource.Token);
-			mockAppLifetime.SetupGet(x => x.ApplicationStopping).Returns(stopCancellationTokenSource.Token);
-			mockServiceProvider.Setup(x => x.GetService(typeof(IApplicationLifetime))).Returns(mockAppLifetime.Object);
-			mockAppBuilder.SetupGet(x => x.ApplicationServices).Returns(mockServiceProvider.Object);
-
-			Assert.ThrowsException<InvalidOperationException>(() => mockAppBuilder.Object.UseAsyncInitialization<TestApplicationBuilderExtensions>((dependency, cancellationToken) => Task.CompletedTask));
-		}
-
-		[TestMethod]
 		public async Task TestGenericAsyncInitializerIsAwaitedOnRequest()
 		{
 			var mockAppBuilder = new Mock<IApplicationBuilder>();
 			var mockAppLifetime = new Mock<IApplicationLifetime>();
 			var mockServiceProvider = new Mock<IServiceProvider>();
+			var mockServiceScopeFactory = new Mock<IServiceScopeFactory>();
+			var mockServiceScope = new Mock<IServiceScope>();
+			mockServiceScopeFactory.Setup(x => x.CreateScope()).Returns(mockServiceScope.Object);
+			mockServiceProvider.Setup(x => x.GetService(typeof(IServiceScopeFactory))).Returns(mockServiceScopeFactory.Object);
 
 			var startCancellationTokenSource = new CancellationTokenSource();
 			var stopCancellationTokenSource = new CancellationTokenSource();
@@ -118,6 +109,10 @@ namespace Cyberboss.AspNetCore.AsyncInitializer.Tests
 			var mockAppBuilder = new Mock<IApplicationBuilder>();
 			var mockAppLifetime = new Mock<IApplicationLifetime>();
 			var mockServiceProvider = new Mock<IServiceProvider>();
+			var mockServiceScopeFactory = new Mock<IServiceScopeFactory>();
+			var mockServiceScope = new Mock<IServiceScope>();
+			mockServiceScopeFactory.Setup(x => x.CreateScope()).Returns(mockServiceScope.Object);
+			mockServiceProvider.Setup(x => x.GetService(typeof(IServiceScopeFactory))).Returns(mockServiceScopeFactory.Object);
 
 			var startCancellationTokenSource = new CancellationTokenSource();
 			var stopCancellationTokenSource = new CancellationTokenSource();
@@ -162,6 +157,10 @@ namespace Cyberboss.AspNetCore.AsyncInitializer.Tests
 			var mockAppBuilder = new Mock<IApplicationBuilder>();
 			var mockAppLifetime = new Mock<IApplicationLifetime>();
 			var mockServiceProvider = new Mock<IServiceProvider>();
+			var mockServiceScopeFactory = new Mock<IServiceScopeFactory>();
+			var mockServiceScope = new Mock<IServiceScope>();
+			mockServiceScopeFactory.Setup(x => x.CreateScope()).Returns(mockServiceScope.Object);
+			mockServiceProvider.Setup(x => x.GetService(typeof(IServiceScopeFactory))).Returns(mockServiceScopeFactory.Object);
 
 			var startCancellationTokenSource = new CancellationTokenSource();
 			var stopCancellationTokenSource = new CancellationTokenSource();
@@ -196,6 +195,10 @@ namespace Cyberboss.AspNetCore.AsyncInitializer.Tests
 			var mockAppBuilder = new Mock<IApplicationBuilder>();
 			var mockAppLifetime = new Mock<IApplicationLifetime>();
 			var mockServiceProvider = new Mock<IServiceProvider>();
+			var mockServiceScopeFactory = new Mock<IServiceScopeFactory>();
+			var mockServiceScope = new Mock<IServiceScope>();
+			mockServiceScopeFactory.Setup(x => x.CreateScope()).Returns(mockServiceScope.Object);
+			mockServiceProvider.Setup(x => x.GetService(typeof(IServiceScopeFactory))).Returns(mockServiceScopeFactory.Object);
 
 			var startCancellationTokenSource = new CancellationTokenSource();
 			var stopCancellationTokenSource = new CancellationTokenSource();
@@ -231,6 +234,10 @@ namespace Cyberboss.AspNetCore.AsyncInitializer.Tests
 			var mockAppBuilder = new Mock<IApplicationBuilder>();
 			var mockAppLifetime = new Mock<IApplicationLifetime>();
 			var mockServiceProvider = new Mock<IServiceProvider>();
+			var mockServiceScopeFactory = new Mock<IServiceScopeFactory>();
+			var mockServiceScope = new Mock<IServiceScope>();
+			mockServiceScopeFactory.Setup(x => x.CreateScope()).Returns(mockServiceScope.Object);
+			mockServiceProvider.Setup(x => x.GetService(typeof(IServiceScopeFactory))).Returns(mockServiceScopeFactory.Object);
 
 			var startCancellationTokenSource = new CancellationTokenSource();
 			var stopCancellationTokenSource = new CancellationTokenSource();
