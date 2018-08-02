@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 using System;
+using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -59,9 +60,15 @@ namespace Cyberboss.AspNetCore.AsyncInitializer
 				tcs.SetResult(null);
 			});
 
+			var applicationStopping = applicationLifetime.ApplicationStopping;
 			applicationBuilder.Use(async (context, next) =>
 			{
 				await tcs.Task.ConfigureAwait(false);
+				if(!initializationTask.IsCompleted || applicationStopping.IsCancellationRequested)
+				{
+					context.Response.StatusCode = (int)HttpStatusCode.ServiceUnavailable;
+					return;
+				}
 				await initializationTask.ConfigureAwait(false);
 				await next().ConfigureAwait(false);
 			});
